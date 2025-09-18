@@ -118,7 +118,7 @@ const ChatSection = ({ messages, onAddMessage }) => {
             </div>
 
             {/* Sources */}
-            {message.sources && message.sources.length > 0 && (
+            {/* {message.sources && message.sources.length > 0 && (
               <div className="mt-3 max-w-lg">
                 <div className="bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-2xl p-4 shadow-lg">
                   <div className="flex items-center mb-3">
@@ -136,7 +136,7 @@ const ChatSection = ({ messages, onAddMessage }) => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
@@ -228,7 +228,7 @@ const ChatSection = ({ messages, onAddMessage }) => {
                 </div>
               </div>
             )}
-            <div ref={messagesEndRef} />
+            {/* <div ref={messagesEndRef} /> */}
           </div>
         )}
       </div>

@@ -60,24 +60,42 @@ def get_llm_chain(collection):
         
         # Create prompt templates for different scenarios
         document_based_template = """
-        You are an AI assistant that answers questions based on provided documents and your general knowledge.
-        
-        Based on the following document context, answer the user's question. If the documents provide relevant information, use that information. If the documents don't contain enough information or the question is about general knowledge, you can also use your general knowledge to provide a comprehensive answer.
+        You are an AI assistant.
+
+        Answer the user's query as directly and helpfully as possible.
+        Use the document context if it contains relevant information.
+        If the context is not useful or does not cover the question, use your general knowledge instead.
+
+        Rules:
+        - Do not mention the document, context, or PDF in your answer.
+        - Do not say things like "according to the document" or "the document does not contain".
+        - Always give a natural, direct, and complete answer.
         
         Document Context:
         {context}
         
         Question: {question}
         
-        Answer: Please provide a helpful and accurate answer. If you're using information from the documents, mention that. If you're using general knowledge, you can mention that as well.
+        Answer: Please provide a helpful and accurate answer.
+        Be straight forward with the answer.
+        #NO PREAMBLE
         """
         
         general_knowledge_template = """
-        You are a helpful AI assistant. The user is asking a question that doesn't seem to be related to any specific documents in your knowledge base.
+        You are a helpful AI assistant.
+
+        Answer the user's question as directly and informatively as possible using your general knowledge.
+
+        Rules:
+        - Do not mention documents, PDFs, or context.
+        - Always give a natural, straightforward answer.
         
         Question: {question}
         
-        Answer: Please provide a helpful and accurate answer using your general knowledge. Be informative and comprehensive in your response.
+        Answer: Please provide a helpful and accurate answer using your general knowledge. 
+        Be informative and comprehensive in your response.
+        Be straight forward with the answer.
+        #NO PREAMBLE
         """
         
         document_prompt = PromptTemplate(

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, FileText, Sparkles, Brain, Zap, BookOpen } from 'lucide-react';
+import { Send, Bot, User, FileText, Sparkles, Brain, Zap } from 'lucide-react';
 import { askQuestion } from '../services/api';
 
 const ChatSection = ({ messages, onAddMessage }) => {
@@ -50,37 +50,37 @@ const ChatSection = ({ messages, onAddMessage }) => {
   const MessageBubble = ({ message }) => {
     const isUser = message.role === 'user';
     
-    const getResponseTypeIcon = (responseType) => {
-      switch(responseType) {
-        case 'document_based':
-          return <FileText className="w-4 h-4 text-blue-600" />;
-        case 'general_knowledge':
-          return <Brain className="w-4 h-4 text-purple-600" />;
-        default:
-          return <Sparkles className="w-4 h-4 text-green-600" />;
-      }
-    };
+    // const getResponseTypeIcon = (responseType) => {
+    //   switch(responseType) {
+    //     case 'document_based':
+    //       return <FileText className="w-4 h-4 text-blue-600" />;
+    //     case 'general_knowledge':
+    //       return <Brain className="w-4 h-4 text-purple-600" />;
+    //     default:
+    //       return <Sparkles className="w-4 h-4 text-green-600" />;
+    //   }
+    // };
 
-    const getResponseTypeBadge = (responseType) => {
-      switch(responseType) {
-        case 'document_based':
-          return (
-            <div className="flex items-center space-x-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
-              <FileText className="w-3 h-3" />
-              <span>From Documents</span>
-            </div>
-          );
-        case 'general_knowledge':
-          return (
-            <div className="flex items-center space-x-1 px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
-              <Brain className="w-3 h-3" />
-              <span>General Knowledge</span>
-            </div>
-          );
-        default:
-          return null;
-      }
-    };
+    // const getResponseTypeBadge = (responseType) => {
+    //   switch(responseType) {
+    //     case 'document_based':
+    //       return (
+    //         <div className="flex items-center space-x-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+    //           <FileText className="w-3 h-3" />
+    //           <span>From Documents</span>
+    //         </div>
+    //       );
+    //     case 'general_knowledge':
+    //       return (
+    //         <div className="flex items-center space-x-1 px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
+    //           <Brain className="w-3 h-3" />
+    //           <span>General Knowledge</span>
+    //         </div>
+    //       );
+    //     default:
+    //       return null;
+    //   }
+    // };
     
     return (
       <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-8`}>
@@ -101,7 +101,7 @@ const ChatSection = ({ messages, onAddMessage }) => {
             {/* Response Type Badge */}
             {!isUser && message.responseType && (
               <div className="mb-2">
-                {getResponseTypeBadge(message.responseType)}
+                {/* {getResponseTypeBadge(message.responseType)} */}
               </div>
             )}
             
@@ -117,26 +117,6 @@ const ChatSection = ({ messages, onAddMessage }) => {
               </p>
             </div>
 
-            {/* Sources */}
-            {/* {message.sources && message.sources.length > 0 && (
-              <div className="mt-3 max-w-lg">
-                <div className="bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-2xl p-4 shadow-lg">
-                  <div className="flex items-center mb-3">
-                    <BookOpen className="w-4 h-4 text-blue-600 mr-2" />
-                    <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">
-                      Sources Referenced
-                    </span>
-                  </div>
-                  <div className="space-y-2">
-                    {message.sources.map((source, index) => (
-                      <div key={index} className="text-xs text-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 px-3 py-2 rounded-xl border border-blue-100">
-                        📄 {source}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )} */}
           </div>
         </div>
       </div>
@@ -163,7 +143,7 @@ const ChatSection = ({ messages, onAddMessage }) => {
           </p>
           
           {/* Capability indicators */}
-          <div className="flex justify-center space-x-4 mt-4">
+          {/* <div className="flex justify-center space-x-4 mt-4">
             <div className="flex items-center space-x-2 px-3 py-1 bg-blue-100/50 rounded-full">
               <FileText className="w-4 h-4 text-blue-600" />
               <span className="text-sm font-medium text-blue-700">Document Search</span>
@@ -172,7 +152,7 @@ const ChatSection = ({ messages, onAddMessage }) => {
               <Brain className="w-4 h-4 text-purple-600" />
               <span className="text-sm font-medium text-purple-700">AI Knowledge</span>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -184,7 +164,7 @@ const ChatSection = ({ messages, onAddMessage }) => {
               <div className="w-20 h-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl flex items-center justify-center shadow-2xl">
                 <Sparkles className="w-10 h-10 text-white" />
               </div>
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-bounce"></div>
+              {/* <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-bounce"></div> */}
             </div>
             
             <h3 className="text-2xl font-bold text-gray-800 mb-4">Ready to assist you!</h3>
@@ -246,9 +226,7 @@ const ChatSection = ({ messages, onAddMessage }) => {
               disabled={isLoading}
               className="w-full px-6 py-4 border border-gray-300/50 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-white/80 backdrop-blur-sm shadow-lg text-gray-800 placeholder-gray-500"
             />
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex space-x-1">
-              <Zap className="w-4 h-4 text-purple-400" />
-            </div>
+            
           </div>
           <button
             type="submit"

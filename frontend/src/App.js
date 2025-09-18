@@ -3,7 +3,7 @@ import './App.css';
 import Header from './components/Header';
 import ChatSection from './components/ChatSection';
 import Sidebar from './components/Sidebar';
-// import AdminPanel from './components/AdminPanel';
+import AdminPanel from './components/AdminPanel';
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -50,10 +50,10 @@ function App() {
       />
 
       {/* Admin Panel */}
-      {/* <AdminPanel 
+      <AdminPanel 
         isOpen={adminPanelOpen}
         onClose={() => setAdminPanelOpen(false)}
-      /> */}
+      />
 
       {/* Main Content */}
       <div className={`transition-all duration-300 ${sidebarOpen ? 'ml-80' : 'ml-0'}`}>

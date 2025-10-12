@@ -15,14 +15,18 @@ function App() {
   const [currentSessionId, setCurrentSessionId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
 
-  // Create a new session automatically when the app starts
+  // ✅ Create new session automatically ONLY once when the app starts
   useEffect(() => {
-    handleNewChat();
-  }, []);
+    if (!initialLoadDone) {
+      handleNewChat();
+      setInitialLoadDone(true);
+    }
+  }, [initialLoadDone]);
 
   const addMessage = (message) => {
-    setMessages(prev => [...prev, message]);
+    setMessages((prev) => [...prev, message]);
   };
 
   const clearChat = () => {
@@ -30,75 +34,76 @@ function App() {
     setCurrentSessionId(null);
   };
 
+  // ✅ Create a new chat session manually
   const handleNewChat = async () => {
     try {
-      // Create a new chat session
       const response = await axios.post(`${API_BASE_URL}/chat/new`, {
-        title: "New Chat"
+        title: 'New Chat',
       });
-      
+
       const newSessionId = response.data.session_id;
       setMessages([]);
       setCurrentSessionId(newSessionId);
-      setRefreshTrigger(prev => prev + 1); // Trigger sidebar refresh
-      
-      // Close sidebar on mobile after creating new chat
+      setRefreshTrigger((prev) => prev + 1); // refresh sidebar list
+
+      // Close sidebar on mobile
       if (window.innerWidth < 1024) {
         setSidebarOpen(false);
       }
     } catch (error) {
       console.error('Error creating new chat:', error);
-      // Fallback - just clear current chat
       clearChat();
     }
   };
 
+  // ✅ Select an existing chat
   const handleSessionSelect = async (sessionId) => {
     if (sessionId === currentSessionId) return;
-    
+
     setLoading(true);
     try {
       const response = await axios.get(`${API_BASE_URL}/chat/${sessionId}`);
       const session = response.data;
-      
-      // Convert session messages to app format
-      const sessionMessages = session.messages.map(msg => ({
+
+      const sessionMessages = session.messages.map((msg) => ({
         role: msg.role,
         content: msg.content,
         sources: msg.sources || [],
         responseType: msg.response_type || 'general',
-        error: false
+        error: false,
       }));
-      
+
       setMessages(sessionMessages);
       setCurrentSessionId(sessionId);
     } catch (error) {
       console.error('Error loading session:', error);
-      // If session doesn't exist or error, start new chat
-      handleNewChat();
+      // ❌ Do NOT auto-create a new chat here
+      setMessages([]);
+      setCurrentSessionId(null);
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ When message is sent, refresh sidebar timestamps
   const handleMessageSent = () => {
-    // Refresh sidebar to update the last message time
-    setRefreshTrigger(prev => prev + 1);
+    setRefreshTrigger((prev) => prev + 1);
   };
 
+  // ✅ When chat is deleted, do NOT create new one automatically
   const handleSessionDelete = (deletedSessionId) => {
-    // If the deleted session was the current one, create a new session
     if (deletedSessionId === currentSessionId) {
-      handleNewChat();
+      setMessages([]);
+      setCurrentSessionId(null);
     }
-    // Refresh sidebar
-    setRefreshTrigger(prev => prev + 1);
+    // only refresh sidebar
+    setRefreshTrigger((prev) => prev + 1);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       {/* Admin Panel */}
-      <AdminPanel 
+      <AdminPanel
         isOpen={adminPanelOpen}
         onClose={() => setAdminPanelOpen(false)}
       />
@@ -106,16 +111,13 @@ function App() {
       {/* Main Layout */}
       <div className="flex h-screen">
         {/* Sidebar */}
-        <Sidebar 
-          isOpen={sidebarOpen} 
+        <Sidebar
+          isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           onClearChat={clearChat}
           onOpenAdminPanel={() => {
             setAdminPanelOpen(true);
-            // Close sidebar on mobile when opening admin panel
-            if (window.innerWidth < 1024) {
-              setSidebarOpen(false);
-            }
+            if (window.innerWidth < 1024) setSidebarOpen(false);
           }}
           currentSessionId={currentSessionId}
           onSessionSelect={handleSessionSelect}
@@ -125,17 +127,17 @@ function App() {
         />
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col lg:ml-0">
-          {/* Header - only visible on mobile/tablet */}
+        <div className="flex-1 flex flex-col lg:ml-24">
+          {/* Header (mobile) */}
           <div className="lg:hidden">
             <Header onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
           </div>
-          
+
           {/* Chat Section */}
-          <div className="flex-1 p-4 lg:p-8 overflow-hidden">
-            <div className="h-full max-w-6xl mx-auto">
-              <ChatSection 
-                messages={messages} 
+          <div className="flex-1 p-4 overflow-hidden">
+            <div className="h-full max-w-[77rem] mx-auto">
+              <ChatSection
+                messages={messages}
                 onAddMessage={addMessage}
                 currentSessionId={currentSessionId}
                 onNewChat={handleNewChat}

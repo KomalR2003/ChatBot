@@ -31,36 +31,7 @@ api.interceptors.response.use(
   }
 );
 
-// File upload functions
-export const uploadFiles = async (files) => {
-  const formData = new FormData();
-  files.forEach((file) => {
-    formData.append('files', file);
-  });
-
-  return api.post('/upload_pdfs/', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-};
-
-// Chat functions
-export const askQuestion = async (question, sessionId = null) => {
-  const formData = new FormData();
-  formData.append('question', question);
-  if (sessionId) {
-    formData.append('session_id', sessionId);
-  }
-
-  return api.post('/ask/', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-};
-
-// Chat session management
+// 🧠 Chat session management
 export const createNewChat = async (title = "New Chat") => {
   return api.post('/chat/new', { title });
 };
@@ -73,25 +44,29 @@ export const getChatSession = async (sessionId) => {
   return api.get(`/chat/${sessionId}`);
 };
 
-
-
+// ✅ Delete a single chat by ID
 export const deleteChatSession = async (sessionId) => {
+  if (!sessionId) throw new Error("Session ID is missing");
   return api.delete(`/chat/${sessionId}`);
 };
 
-export const clearAllChats = async () => {
-  return api.delete('/chat/clear-all');
-};
+// ❌ Remove or ignore this
+// export const clearAllChats = async () => {
+//   return api.delete('/chat/clear-all');
+// };
 
-// Legacy functions for backward compatibility
-export const getChatHistory = async () => {
-  return getChatSessions();
-};
+export const askQuestion = async (question, sessionId = null) => {
+  const formData = new FormData();
+  formData.append('question', question);
+  if (sessionId) {
+    formData.append('session_id', sessionId);
+  }
 
-export const saveChat = async (chatData) => {
-  // This function is no longer needed as chats are saved automatically
-  // Keeping it for backward compatibility
-  return Promise.resolve({ data: { message: "Chat saved automatically" } });
+  return api.post('/ask/', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
 
 export const testConnection = async () => {
